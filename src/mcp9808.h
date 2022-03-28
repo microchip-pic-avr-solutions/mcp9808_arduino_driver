@@ -3,6 +3,8 @@
 
 #include <Arduino.h>
 
+#define WIRE Wire1 // Global Wire instance for driver
+
 typedef enum {
 	res_05 = 0x00,
 	res_025 = 0x01,
@@ -33,6 +35,14 @@ public:
      * @return int 0 if successful, -1 if failed
      */
 	int8_t begin(void);
+	
+	/**
+	 * @brief Initialize MCP9808 library with custom I2C address
+	 * 
+	 * @param address Custom I2C address
+	 * @return int 0 if successful, -1 if failed
+	 */
+	int8_t begin(uint8_t address);
 
 	/**
 	 * @brief Read temperature (*C, Celcius)
@@ -61,25 +71,6 @@ public:
 	 * @return int 0 if successful, -1 if failed
 	 */
 	int8_t wake(void);
-
-	// /**
-	//  * @brief Set alerts
-	//  * 
-	//  * @param comp_int_toggle int Toggle between Comparator (0) or Interrupt (1) output mode
-	//  * @param active_low_high_toggle int Toggle between Active low (0) or Active high (1) output polarity
-	//  * @param alert_crit Use alert output as critical temperature (0 if false, 1 if true)
-	//  * @return int 0 if successful, -1 if failed
-	//  */
-	// int set_alert(bool comp_int_toggle, bool active_low_high_toggle, bool alert_crit);
-
-	// /**
-	//  * @brief Disable alerts
-	//  * 
-	//  * @return int 0 if successful, -1 if failed
-	//  */
-	// int disable_alert(void);
-
-	// int set_temp_limit(int upper, int lower, int crit, bool lock);
 
 	/**
 	 * @brief Set sensor resolution

@@ -4,7 +4,8 @@
 
 ## Description
 
-Low-level Arduino driver for the MCP9808 Digital Temperature Sensor [1] mainly focused on the AVR-IoT Cellular Mini development kit.
+Low-level Arduino driver for the MCP9808 Digital Temperature Sensor [1] mainly focused on the 
+AVR-IoT Cellular Mini development kit.
 
 ## Install
 
@@ -25,7 +26,8 @@ After installation, add this line to the top of your *.ino* file;
 
 This adds the library header file to your project, which includes all of the library functions and data types.
 
-You also need to run the [Begin](#begin) command in order to initialize the library. See the [Available Commands](#available-commands) section for more information
+You also need to run the [Begin](#begin) command in order to initialize the library. 
+See the [Available Commands](#available-commands) section for more information
 
 <br/>
 
@@ -34,16 +36,34 @@ You also need to run the [Begin](#begin) command in order to initialize the libr
 List of the commands available for the MCP9808 library. 
 
 ### Begin
+There are 2 ways to initialize the MCP9808 library:
 
 ```c
 /** 
-* @brief Initialize MCP9808 library * 
+* @brief Initialize MCP9808 library 
+* 
 * @return int 0 if successful, -1 if failed 
 */
 int8_t begin(void);
 ```
 
-This command initializes the MCP9808 library by starting a *TWI* instance, checks for the correct manufacturer and device ID, and wipes the configuration register.
+This command initializes the MCP9808 library by starting a *TWI* instance, checks for the correct manufacturer and 
+device ID, and wipes the configuration register.
+
+<br/>
+
+```c
+/**
+ * @brief Initialize MCP9808 library with custom I2C address
+ * 
+ * @param address Custom I2C address
+ * @return int 0 if successful, -1 if failed
+ */
+int8_t begin(uint8_t address);
+```
+
+This command initializes the MCP9808 library in a similar way to the command above, with an exception of the user being
+able to feed a custom I2C sensor address to the library.
 
 <br/>
 
@@ -67,7 +87,8 @@ float readTempC(void);
 float readTempF(void);
 ```
 
-These functions return the temperature, either in Celsius or Fahrenheit, which is measured by the sensor. These values are returned as a *float* data type but can be cast into an integer (*int*) for most purposes.
+These functions return the temperature, either in Celsius or Fahrenheit, which is measured by the sensor. 
+These values are returned as a *float* data type but can be cast into an integer (*int*) for most purposes.
 
 <br/>
 
@@ -200,7 +221,10 @@ uint16_t regRead16(uint8_t reg_ptr);
 ```
 These commands are abstraction functions for reading/writing to 8 and 16-bit registers in the MCP9808. 
 
-These commands are mostly meant for internal use in the commands mentioned above but are available through the library header file for general use. We do not recommend using these functions for functionality like reading temperature, low-power mode etc, but rather use the dedicated functions like [read_temp](#read-temperature), [shutdown](#low-power-mode), [wake](#low-power-mode) and similar. 
+These commands are mostly meant for internal use in the commands mentioned above but are available through 
+the library header file for general use. We do not recommend using these functions for functionality like 
+reading temperature, low-power mode etc, but rather use the dedicated functions like [read_temp](#read-temperature), 
+[shutdown](#low-power-mode), [wake](#low-power-mode) and similar. 
 
 <br/>
 
@@ -209,9 +233,19 @@ These commands are mostly meant for internal use in the commands mentioned above
 Examples can be found in the **examples** folder. There are 3 examples available:
 
 - *low_power* - Example of using the low-power functionality of the sensor device.
-- *read_temp* - Example of getting a temperature reading from the sensor (in degrees Celsius and Fahrenheit) and sending that data through a serial interface.
+- *read_temp* - Example of getting a temperature reading from the sensor (in degrees Celsius and Fahrenheit) and 
+sending that data through a serial interface.
 - *resolution* - Example of setting and retrieving resolution configuration from the sensor device.
 
+<br/>
+
+__NOTE: The driver is written with Rev2 of the Cellular Mini board in mind, but the examples listed above
+can easily be switched between Rev1 and Rev2 by commmenting/uncommenting the following lines in the examples:__
+```c
+/* Initialize MCP9808 library */
+err = Mcp9808.begin(0x18); // Rev1
+// err = Mcp9808.begin(); // Rev2
+```
 <br/>
 
 ---

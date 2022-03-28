@@ -2,10 +2,11 @@
 
 #include <Wire.h>
 
-#define SerialDebug Serial3
+// #define SerialDebug Serial5 // Cellular
+#define SerialDebug Serial3 // Cellular Mini
 // #define DEBUG
 
-#define I2C_ADDRESS 0x18
+#define I2C_ADDRESS_DEFAULT 0x19
 #define POINTER_CONFIG 0x01		  // MCP9808 configuration register
 #define POINTER_UPPER_TEMP 0x02	  // Upper alert boundary
 #define POINTER_LOWER_TEMP 0x03	  // Lower alert boundery
@@ -15,26 +16,24 @@
 #define POINTER_DEVICE_ID 0x07	  // Device ID
 #define POINTER_RESOLUTION 0x08   // Sensor resolution
 
+/* Global variables */
+uint8_t I2C_ADDRESS;
+
 /* Singleton instance. Used by rest of library */
 MCPClass Mcp9808 = MCPClass::instance();
 
-/**
- * @brief Initialize MCP9808 library
- * 
- * @return int 0 if successful, -1 if failed
- */
-int8_t MCPClass::begin(void)
-{
-	Wire1.begin();
+/* Internal function for initialzing library. Called by begin() functions */
+static int8_t initialize(void) {
+	WIRE.begin();
 
-	if (regRead16(POINTER_MANUF_ID) != 0x0054)
+	if (Mcp9808.regRead16(POINTER_MANUF_ID) != 0x0054)
 	{
 #ifdef DEBUG
         SerialDebug.println("Error: could not read manufacturer ID");
 #endif
 		return -1;
 	}
-	else if (regRead16(POINTER_DEVICE_ID) != 0x0400)
+	else if (Mcp9808.regRead16(POINTER_DEVICE_ID) != 0x0400)
 	{
 #ifdef DEBUG
         SerialDebug.println("Error: could not read device ID");
@@ -42,8 +41,29 @@ int8_t MCPClass::begin(void)
 		return -1;
 	}
 
-	regWrite16(POINTER_CONFIG, 0x00);
+	Mcp9808.regWrite16(POINTER_CONFIG, 0x00);
 	return 0;
+}
+
+/**
+ * @brief Initialize MCP9808 library
+ * 
+ * @return int 0 if successful, -1 if failed
+ */
+int8_t MCPClass::begin(void) {
+	I2C_ADDRESS = 0x18;
+	return initialize();
+}
+
+/**
+ * @brief Initialize MCP9808 library with custom I2C address
+ * 
+ * @param address Custom I2C address
+ * @return int 0 if successful, -1 if failed
+ */
+int8_t MCPClass::begin(uint8_t address) {
+	I2C_ADDRESS = address;
+	return initialize();
 }
 
 /**
@@ -178,12 +198,12 @@ uint16_t MCPClass::getResolution(void) {
  */
 void MCPClass::regWrite8(uint8_t reg_ptr, uint8_t data)
 {
-	Wire1.beginTransmission(I2C_ADDRESS);
+	WIRE.beginTransmission(I2C_ADDRESS);
 
-	Wire1.write(reg_ptr); // Register pointer
-	Wire1.write(data);	 // 8-bit Data
+	WIRE.write(reg_ptr); // Register pointer
+	WIRE.write(data);	 // 8-bit Data
 
-	Wire1.endTransmission();
+	WIRE.endTransmission();
 }
 
 /**
@@ -194,13 +214,13 @@ void MCPClass::regWrite8(uint8_t reg_ptr, uint8_t data)
  */
 void MCPClass::regWrite16(uint8_t reg_ptr, uint16_t data)
 {
-	Wire1.beginTransmission(I2C_ADDRESS);
+	WIRE.beginTransmission(I2C_ADDRESS);
 
-	Wire1.write(reg_ptr);   // Register pointer
-	Wire1.write(data >> 8); // MSB data
-	Wire1.write(data & 0xFF); // LSB data
+	WIRE.write(reg_ptr);   // Register pointer
+	WIRE.write(data >> 8); // MSB data
+	WIRE.write(data & 0xFF); // LSB data
 
-	Wire1.endTransmission();
+	WIRE.endTransmission();
 }
 
 /**
@@ -215,15 +235,15 @@ uint8_t MCPClass::regRead8(uint8_t reg_ptr)
 	uint8_t ret;
 
 	/* Write new register pointer */
-	Wire1.beginTransmission(I2C_ADDRESS);
-	Wire1.write(reg_ptr); // Register pointer
-	Wire1.endTransmission();
+	WIRE.beginTransmission(I2C_ADDRESS);
+	WIRE.write(reg_ptr); // Register pointer
+	WIRE.endTransmission();
 
 	/* Read data byte */
-	Wire1.requestFrom(I2C_ADDRESS, 1, 0x01);
-	while (Wire1.available())
+	WIRE.requestFrom(I2C_ADDRESS, 1, 0x01);
+	while (WIRE.available())
 	{
-		ret = Wire1.read();
+		ret = WIRE.read();
 	}
 
 	return ret;
@@ -241,16 +261,16 @@ uint16_t MCPClass::regRead16(uint8_t reg_ptr)
 	unsigned char rx_data[2];
 
 	/* Write new register pointer */
-	Wire1.beginTransmission(I2C_ADDRESS);
-	Wire1.write(reg_ptr); // Register pointer
-	Wire1.endTransmission();
+	WIRE.beginTransmission(I2C_ADDRESS);
+	WIRE.write(reg_ptr); // Register pointer
+	WIRE.endTransmission();
 
 	/* Read data byte */
-	Wire1.requestFrom(I2C_ADDRESS, 2, 0x01);
+	WIRE.requestFrom(I2C_ADDRESS, 2, 0x01);
 	int i = 0;
-	while (Wire1.available())
+	while (WIRE.available())
 	{
-		rx_data[i] = Wire1.read();
+		rx_data[i] = WIRE.read();
 		i++;
 	}
 
