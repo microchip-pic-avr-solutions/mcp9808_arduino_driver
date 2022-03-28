@@ -1,4 +1,3 @@
-// TODO: add license header
 #ifndef MCP9808_H
 #define MCP9808_H
 
@@ -33,35 +32,35 @@ public:
      * 
      * @return int 0 if successful, -1 if failed
      */
-	int begin(void);
+	int8_t begin(void);
 
 	/**
 	 * @brief Read temperature (*C, Celcius)
 	 * 
 	 * @return float Returned temperature
 	 */
-	float read_temp_c(void);
+	float readTempC(void);
 	
 	/**
 	 * @brief Read temperature (*F, Fahrenheit)
 	 * 
 	 * @return float Returned temperature
 	 */
-	float read_temp_f(void);
+	float readTempF(void);
 
 	/**
 	 * @brief Shutdown MCP9808 (low power mode)
 	 * 
 	 * @return int 0 if successful, -1 if failed
 	 */
-	int shutdown(void);
+	int8_t shutdown(void);
 
 	/**
 	 * @brief Wake up MCP9808 (low power mode)
 	 * 
 	 * @return int 0 if successful, -1 if failed
 	 */
-	int wake(void);
+	int8_t wake(void);
 
 	// /**
 	//  * @brief Set alerts
@@ -87,14 +86,14 @@ public:
 	 * 
 	 * @param resolution res_t Resolution enum, see header file
 	 */
-	void set_resolution(res_t resolution);
+	void setResolution(res_t resolution);
 
 	/**
 	 * @brief Get sensor resolution
 	 * 
 	 * @return int Resolution (factor x1e4), -1 if failed
 	 */
-	int get_resolution(void);
+	uint16_t getResolution(void);
 
 
 ////// Read/write procedures //////
@@ -104,7 +103,7 @@ public:
 	 * @param reg_ptr Register pointer
 	 * @param data 16-bit data (MSB, LSB)
 	 */
-	void reg_write8(uint8_t reg_ptr, uint8_t data);
+	void regWrite8(uint8_t reg_ptr, uint8_t data);
 
 	/**
 	 * @brief 16-bit write procedure
@@ -112,7 +111,7 @@ public:
 	 * @param reg_ptr Register pointer
 	 * @param data 8-bit data
 	 */
-	void reg_write16(uint8_t reg_ptr, uint16_t data);
+	void regWrite16(uint8_t reg_ptr, uint16_t data);
 	
 	/**
 	 * @brief 8-bit read procedure
@@ -120,7 +119,7 @@ public:
 	 * @param reg_ptr Register pointer
 	 * @return uint8_t Returned data
 	 */
-	uint8_t reg_read8(uint8_t reg_ptr);
+	uint8_t regRead8(uint8_t reg_ptr);
 
 	/**
 	 * @brief 16-bit read procedure
@@ -128,8 +127,8 @@ public:
 	 * @param reg_ptr Register pointer
 	 * @return uint16_t Returned data
 	 */
-	uint16_t reg_read16(uint8_t reg_ptr);
+	uint16_t regRead16(uint8_t reg_ptr);
 };
 
-extern MCPClass mcp9808;
+extern MCPClass Mcp9808;
 #endif

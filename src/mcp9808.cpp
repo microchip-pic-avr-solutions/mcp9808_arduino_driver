@@ -1,4 +1,3 @@
-// TODO: add license header
 #include "mcp9808.h"
 
 #include <Wire.h>
@@ -17,25 +16,25 @@
 #define POINTER_RESOLUTION 0x08   // Sensor resolution
 
 /* Singleton instance. Used by rest of library */
-MCPClass mcp9808 = MCPClass::instance();
+MCPClass Mcp9808 = MCPClass::instance();
 
 /**
  * @brief Initialize MCP9808 library
  * 
  * @return int 0 if successful, -1 if failed
  */
-int MCPClass::begin(void)
+int8_t MCPClass::begin(void)
 {
 	Wire1.begin();
 
-	if (reg_read16(POINTER_MANUF_ID) != 0x0054)
+	if (regRead16(POINTER_MANUF_ID) != 0x0054)
 	{
 #ifdef DEBUG
         SerialDebug.println("Error: could not read manufacturer ID");
 #endif
 		return -1;
 	}
-	else if (reg_read16(POINTER_DEVICE_ID) != 0x0400)
+	else if (regRead16(POINTER_DEVICE_ID) != 0x0400)
 	{
 #ifdef DEBUG
         SerialDebug.println("Error: could not read device ID");
@@ -43,7 +42,7 @@ int MCPClass::begin(void)
 		return -1;
 	}
 
-	reg_write16(POINTER_CONFIG, 0x00);
+	regWrite16(POINTER_CONFIG, 0x00);
 	return 0;
 }
 
@@ -52,10 +51,10 @@ int MCPClass::begin(void)
  * 
  * @return float Returned temperature
  */
-float MCPClass::read_temp_c(void)
+float MCPClass::readTempC(void)
 {
 	/* Read ambient temperature register */
-	uint16_t temp = reg_read16(POINTER_AMBIENT_TEMP);
+	uint16_t temp = regRead16(POINTER_AMBIENT_TEMP);
 	
 	uint8_t upper_byte = temp >> 8;
 	uint8_t lower_byte = (temp & 0xFF);
@@ -79,9 +78,9 @@ float MCPClass::read_temp_c(void)
  * 
  * @return float Returned temperature (x100 scale)
  */
-float MCPClass::read_temp_f(void)
+float MCPClass::readTempF(void)
 {
-	float temp = read_temp_c();
+	float temp = readTempC();
 
 	/* Convert *C to *F */
 	return (((temp * 9) / 5) + 32);
@@ -92,12 +91,12 @@ float MCPClass::read_temp_f(void)
  * 
  * @return int 0 if successful, -1 if failed
  */
-int MCPClass::shutdown(void) {
-	uint16_t reg = reg_read16(POINTER_CONFIG); // Get current value of CONFIG register
+int8_t MCPClass::shutdown(void) {
+	uint16_t reg = regRead16(POINTER_CONFIG); // Get current value of CONFIG register
 
 	/* Check if bits 7 and 6 (lock bits) are set */
 	if (!((reg & (1 << 7)) && (reg & (1 << 6)))) {
-		reg_write16(POINTER_CONFIG, reg | (1 << 8)); // Set bit 8 (SHDN)
+		regWrite16(POINTER_CONFIG, reg | (1 << 8)); // Set bit 8 (SHDN 
 	} else {
 #ifdef DEBUG
         SerialDebug.println("Error: lock bits are set");
@@ -113,13 +112,13 @@ int MCPClass::shutdown(void) {
  * 
  * @return int 0 if successful, -1 if failed
  */
-int MCPClass::wake(void) {
+int8_t MCPClass::wake(void) {
 	/* Get current value of CONFIG register */
-	uint16_t reg = reg_read16(POINTER_CONFIG);
+	uint16_t reg = regRead16(POINTER_CONFIG);
 
 	/* Check if shutdown bit is set */
 	if (reg & (1 << 8)) {
-		reg_write16(POINTER_CONFIG, reg | (0 << 8)); // Clear bit 8 (SHDN)
+		regWrite16(POINTER_CONFIG, reg | (0 << 8)); // Clear bit 8 (SHDN)
 	} else {
 #ifdef DEBUG
         SerialDebug.println("Error: shutdown (SHDN) bit not set");
@@ -140,34 +139,34 @@ int MCPClass::wake(void) {
 //  */
 // int MCPClass::set_alert(bool comp_int_toggle, bool active_low_high_toggle, bool alert_crit) {
 // 	/* Get current value of CONFIG register */
-// 	uint16_t reg = reg_read16(POINTER_CONFIG);
+// 	uint16_t reg = regRead16(POINTER_CONFIG);
 
 // 	/* Enable alerts */
-// 	reg_write16(POINTER_CONFIG, (reg | (1 << 3)));
+// 	regWrite16(POINTER_CONFIG, (reg | (1 << 3)));
 
 // 	/* Set Comparator or Interrupt output mode */
-// 	reg = reg_read16(POINTER_CONFIG);
+// 	reg = regRead16(POINTER_CONFIG);
 // 	if(comp_int_toggle) {
-// 		reg_write16(POINTER_CONFIG, (reg | (1 << 0))); // Enable Interrupt output mode
+// 		regWrite16(POINTER_CONFIG, (reg | (1 << 0))); // Enable Interrupt output mode
 // 	} else {
-// 		reg_write16(POINTER_CONFIG, (reg & ~(1 << 0))); // Enable Comparator output mode
+// 		regWrite16(POINTER_CONFIG, (reg & ~(1 << 0))); // Enable Comparator output mode
 // 	}
 
 // 	/* Set active high/low output polarity */
-// 	reg = reg_read16(POINTER_CONFIG);
+// 	reg = regRead16(POINTER_CONFIG);
 // 	if(active_low_high_toggle) {
-// 		reg_write16(POINTER_CONFIG, (reg | (1 << 1))); // Enable Active-high output polarity
+// 		regWrite16(POINTER_CONFIG, (reg | (1 << 1))); // Enable Active-high output polarity
 // 	} else {
-// 		reg_write16(POINTER_CONFIG, (reg & ~(1 << 1))); // Enable Active-low output polarity
+// 		regWrite16(POINTER_CONFIG, (reg & ~(1 << 1))); // Enable Active-low output polarity
 // 	}
 
 // 	/* Use alert output as critical temperature if window lock is not set */
-// 	reg = reg_read16(POINTER_CONFIG);
+// 	reg = regRead16(POINTER_CONFIG);
 // 	if (!(reg & (1 << 6))) {
 // 		if(alert_crit) {
-// 			reg_write16(POINTER_CONFIG, (reg | (1 << 2))); // Enable alert output critical
+// 			regWrite16(POINTER_CONFIG, (reg | (1 << 2))); // Enable alert output critical
 // 		} else {
-// 			reg_write16(POINTER_CONFIG, (reg & ~(1 << 2))); // Enable alert output non-critical
+// 			regWrite16(POINTER_CONFIG, (reg & ~(1 << 2))); // Enable alert output non-critical
 // 		}
 // 	} else {
 // #ifdef DEBUG
@@ -177,7 +176,7 @@ int MCPClass::wake(void) {
 // 	}
 
 // 	/* Check if alert output is asserted */
-// 	reg = reg_read16(POINTER_CONFIG);
+// 	reg = regRead16(POINTER_CONFIG);
 // 	if (!(reg & (1 << 4))) {
 // #ifdef DEBUG
 //         SerialDebug.println("Error: alert output not asserted");
@@ -195,16 +194,16 @@ int MCPClass::wake(void) {
 //  */
 // int MCPClass::disable_alert(void) {
 // 	/* Get current value of CONFIG register */
-// 	uint16_t reg = reg_read16(POINTER_CONFIG);
+// 	uint16_t reg = regRead16(POINTER_CONFIG);
 
 // 	/* Disable alerts */
-// 	// reg = reg_read16(POINTER_CONFIG);
+// 	// reg = regRead16(POINTER_CONFIG);
 //     // SerialDebug.printf("%04x\n", reg); 
 	
-// 	reg_write16(POINTER_CONFIG, (reg & ~(1 << 3)));
+// 	regWrite16(POINTER_CONFIG, (reg & ~(1 << 3)));
 	
 // 	/* Check if alert output is asserted */
-// 	reg = mcp9808.reg_read16(POINTER_CONFIG);
+// 	reg = mcp9808.regRead16(POINTER_CONFIG);
 // 	if (reg & (1 << 4)) {
 // #ifdef DEBUG
 //         SerialDebug.println("Error: alert output set");
@@ -220,8 +219,8 @@ int MCPClass::wake(void) {
  * 
  * @param resolution res_t Resolution enum, see mcp9808.h
  */
-void MCPClass::set_resolution(res_t resolution) {
-	reg_write8(POINTER_RESOLUTION, (0x00 | resolution));
+void MCPClass::setResolution(res_t resolution) {
+	regWrite8(POINTER_RESOLUTION, (0x00 | resolution));
 }
 
 /**
@@ -229,9 +228,9 @@ void MCPClass::set_resolution(res_t resolution) {
  * 
  * @return int Resolution (factor x1e4), -1 if failed
  */
-int MCPClass::get_resolution(void) {
+uint16_t MCPClass::getResolution(void) {
 	/* Get current value of RESOLUTION register */
-	uint8_t reg = reg_read8(POINTER_RESOLUTION);
+	uint8_t reg = regRead8(POINTER_RESOLUTION);
 
 	/* Return resolution (factor x1e4) */
 	switch (reg) {
@@ -262,7 +261,7 @@ int MCPClass::get_resolution(void) {
  * @param reg_ptr Register pointer
  * @param data 8-bit data
  */
-void MCPClass::reg_write8(uint8_t reg_ptr, uint8_t data)
+void MCPClass::regWrite8(uint8_t reg_ptr, uint8_t data)
 {
 	Wire1.beginTransmission(I2C_ADDRESS);
 
@@ -278,7 +277,7 @@ void MCPClass::reg_write8(uint8_t reg_ptr, uint8_t data)
  * @param reg_ptr Register pointer
  * @param data 16-bit data (MSB, LSB)
  */
-void MCPClass::reg_write16(uint8_t reg_ptr, uint16_t data)
+void MCPClass::regWrite16(uint8_t reg_ptr, uint16_t data)
 {
 	Wire1.beginTransmission(I2C_ADDRESS);
 
@@ -295,7 +294,7 @@ void MCPClass::reg_write16(uint8_t reg_ptr, uint16_t data)
  * @param reg_ptr Register pointer
  * @return uint8_t Returned data
  */
-uint8_t MCPClass::reg_read8(uint8_t reg_ptr)
+uint8_t MCPClass::regRead8(uint8_t reg_ptr)
 {
 	/* Variables */
 	uint8_t ret;
@@ -321,7 +320,7 @@ uint8_t MCPClass::reg_read8(uint8_t reg_ptr)
  * @param reg_ptr Register pointer
  * @return uint16_t Returned data
  */
-uint16_t MCPClass::reg_read16(uint8_t reg_ptr)
+uint16_t MCPClass::regRead16(uint8_t reg_ptr)
 {
 	/* Variables */
 	unsigned char rx_data[2];
