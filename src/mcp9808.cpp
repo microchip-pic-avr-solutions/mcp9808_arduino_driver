@@ -51,7 +51,7 @@ static int8_t initialize(void) {
  * @return int 0 if successful, -1 if failed
  */
 int8_t MCPClass::begin(void) {
-	I2C_ADDRESS = 0x18;
+	I2C_ADDRESS = I2C_ADDRESS_DEFAULT;
 	return initialize();
 }
 
