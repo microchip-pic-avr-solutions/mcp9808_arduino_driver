@@ -31,14 +31,14 @@ static int8_t initialize(void) {
 #ifdef DEBUG
         SerialDebug.println("Error: could not read manufacturer ID");
 #endif
-		return -1;
+		return 1;
 	}
 	else if (Mcp9808.regRead16(POINTER_DEVICE_ID) != 0x0400)
 	{
 #ifdef DEBUG
         SerialDebug.println("Error: could not read device ID");
 #endif
-		return -1;
+		return 1;
 	}
 
 	Mcp9808.regWrite16(POINTER_CONFIG, 0x00);
@@ -48,7 +48,7 @@ static int8_t initialize(void) {
 /**
  * @brief Initialize MCP9808 library
  * 
- * @return int 0 if successful, -1 if failed
+ * @return int 0 if successful, 1 if failed
  */
 int8_t MCPClass::begin(void) {
 	I2C_ADDRESS = I2C_ADDRESS_DEFAULT;
@@ -59,7 +59,7 @@ int8_t MCPClass::begin(void) {
  * @brief Initialize MCP9808 library with custom I2C address
  * 
  * @param address Custom I2C address
- * @return int 0 if successful, -1 if failed
+ * @return int 0 if successful, 1 if failed
  */
 int8_t MCPClass::begin(uint8_t address) {
 	I2C_ADDRESS = address;
@@ -109,7 +109,7 @@ float MCPClass::readTempF(void)
 /**
  * @brief Shutdown MCP9808 (low power mode)
  * 
- * @return int 0 if successful, -1 if failed
+ * @return int 0 if successful, 1 if failed
  */
 int8_t MCPClass::shutdown(void) {
 	uint16_t reg = regRead16(POINTER_CONFIG); // Get current value of CONFIG register
@@ -121,7 +121,7 @@ int8_t MCPClass::shutdown(void) {
 #ifdef DEBUG
         SerialDebug.println("Error: lock bits are set");
 #endif
-		return -1;
+		return 1;
 	}
 
 	return 0;	
@@ -130,7 +130,7 @@ int8_t MCPClass::shutdown(void) {
 /**
  * @brief Wake up MCP9808 (low power mode)
  * 
- * @return int 0 if successful, -1 if failed
+ * @return int 0 if successful, 1 if failed
  */
 int8_t MCPClass::wake(void) {
 	/* Get current value of CONFIG register */
@@ -143,7 +143,7 @@ int8_t MCPClass::wake(void) {
 #ifdef DEBUG
         SerialDebug.println("Error: shutdown (SHDN) bit not set");
 #endif
-		return -1;
+		return 1;
 	}
 
 	return 0;	
@@ -161,7 +161,7 @@ void MCPClass::setResolution(res_t resolution) {
 /**
  * @brief Get sensor resolution
  * 
- * @return int Resolution (factor x1e4), -1 if failed
+ * @return int Resolution (factor x1e4), 1 if failed
  */
 uint16_t MCPClass::getResolution(void) {
 	/* Get current value of RESOLUTION register */
@@ -185,7 +185,7 @@ uint16_t MCPClass::getResolution(void) {
 #ifdef DEBUG
 			SerialDebug.println("Error: resolution not in list");
 #endif
-			return -1;
+			return 1;
 	}
 }
 

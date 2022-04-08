@@ -11,7 +11,7 @@ void setup(void) {
     /* Initialize MCP9808 library */
     err = Mcp9808.begin(0x18); // Rev1
     // err = Mcp9808.begin(); // Rev2
-    if (err < 0) {
+    if (err) {
         SerialDebug.println("Error: could not start MCP9808 library");
     }
 }
@@ -21,7 +21,7 @@ void loop(void) {
 
     /* Shut down MCP9808 (set in low power mode) */
     err = Mcp9808.shutdown();
-    if (err < 0) {
+    if (err) {
         SerialDebug.println("Error: could not shutdown MCP9808");
     }
 
@@ -30,7 +30,7 @@ void loop(void) {
 
     /* Wake up MCP9808 */
     err = Mcp9808.wake();
-    if (err < 0) {
+    if (err) {
         SerialDebug.println("Error: could not wake MCP9808");
     }
 }

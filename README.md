@@ -42,7 +42,7 @@ There are 2 ways to initialize the MCP9808 library:
 /** 
 * @brief Initialize MCP9808 library 
 * 
-* @return int 0 if successful, -1 if failed 
+* @return int 0 if successful, 1 if failed 
 */
 int8_t begin(void);
 ```
@@ -57,7 +57,7 @@ device ID, and wipes the configuration register.
  * @brief Initialize MCP9808 library with custom I2C address
  * 
  * @param address Custom I2C address
- * @return int 0 if successful, -1 if failed
+ * @return int 0 if successful, 1 if failed
  */
 int8_t begin(uint8_t address);
 ```
@@ -98,7 +98,7 @@ These values are returned as a *float* data type but can be cast into an integer
 /** 
 * @brief Shutdown MCP9808 (low power mode) 
 * 
-* @return int 0 if successful, -1 if failed 
+* @return int 0 if successful, 1 if failed 
 */
 int8_t shutdown(void);
 ```
@@ -117,7 +117,7 @@ The datasheet [1] states the following about Shutdown mode
 /** 
 * @brief Wake up MCP9808 (low power mode) 
 * 
-* @return int 0 if successful, -1 if failed 
+* @return int 0 if successful, 1 if failed 
 */
 int8_t wake(void);
 ```
@@ -167,7 +167,7 @@ This command sets the device resolution based on the resolution enumeration give
 /**
  * @brief Get sensor resolution
  * 
- * @return int Resolution (factor x1e4), -1 if failed
+ * @return int Resolution (factor x1e4), 1 if failed
  */
 uint16_t getResolution(void);
 ```
