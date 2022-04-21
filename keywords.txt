@@ -6,7 +6,3 @@ shutdown    KEYWORD2
 wake    KEYWORD2
 setResolution  KEYWORD2
 getResolution  KEYWORD2
-regWrite8  KEYWORD2
-regWrite16 KEYWORD2
-regRead8   KEYWORD2
-regRead16  KEYWORD2

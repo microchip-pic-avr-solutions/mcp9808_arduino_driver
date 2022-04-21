@@ -83,40 +83,6 @@ public:
 	 * @return int Resolution (factor x1e4), 1 if failed
 	 */
 	uint16_t getResolution(void);
-
-
-////// Read/write procedures //////
-	/**
-	 * @brief 8-bit write procedure
-	 * 
-	 * @param reg_ptr Register pointer
-	 * @param data 16-bit data (MSB, LSB)
-	 */
-	void regWrite8(uint8_t reg_ptr, uint8_t data);
-
-	/**
-	 * @brief 16-bit write procedure
-	 * 
-	 * @param reg_ptr Register pointer
-	 * @param data 8-bit data
-	 */
-	void regWrite16(uint8_t reg_ptr, uint16_t data);
-	
-	/**
-	 * @brief 8-bit read procedure
-	 * 
-	 * @param reg_ptr Register pointer
-	 * @return uint8_t Returned data
-	 */
-	uint8_t regRead8(uint8_t reg_ptr);
-
-	/**
-	 * @brief 16-bit read procedure
-	 * 
-	 * @param reg_ptr Register pointer
-	 * @return uint16_t Returned data
-	 */
-	uint16_t regRead16(uint8_t reg_ptr);
 };
 
 extern MCPClass Mcp9808;

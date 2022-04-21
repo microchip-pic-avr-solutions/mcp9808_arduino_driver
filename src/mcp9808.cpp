@@ -20,6 +20,11 @@
 /* Global variables */
 static uint8_t I2C_ADDRESS;
 
+void regWrite8(uint8_t reg_ptr, uint8_t data);
+void regWrite16(uint8_t reg_ptr, uint16_t data);
+uint8_t regRead8(uint8_t reg_ptr);
+uint16_t regRead16(uint8_t reg_ptr);
+
 /* Singleton instance. Used by rest of library */
 MCPClass Mcp9808 = MCPClass::instance();
 
@@ -27,14 +32,14 @@ MCPClass Mcp9808 = MCPClass::instance();
 static int8_t initialize(void) {
 	WIRE.begin();
 
-	if (Mcp9808.regRead16(POINTER_MANUF_ID) != 0x0054)
+	if (regRead16(POINTER_MANUF_ID) != 0x0054)
 	{
 #ifdef DEBUG
         SerialDebug.println("Error: could not read manufacturer ID");
 #endif
 		return 1;
 	}
-	else if (Mcp9808.regRead16(POINTER_DEVICE_ID) != 0x0400)
+	else if (regRead16(POINTER_DEVICE_ID) != 0x0400)
 	{
 #ifdef DEBUG
         SerialDebug.println("Error: could not read device ID");
@@ -42,7 +47,7 @@ static int8_t initialize(void) {
 		return 1;
 	}
 
-	Mcp9808.regWrite16(POINTER_CONFIG, 0x00);
+	regWrite16(POINTER_CONFIG, 0x00);
 	return 0;
 }
 
@@ -197,7 +202,7 @@ uint16_t MCPClass::getResolution(void) {
  * @param reg_ptr Register pointer
  * @param data 8-bit data
  */
-void MCPClass::regWrite8(uint8_t reg_ptr, uint8_t data)
+void regWrite8(uint8_t reg_ptr, uint8_t data)
 {
 	WIRE.beginTransmission(I2C_ADDRESS);
 
@@ -213,7 +218,7 @@ void MCPClass::regWrite8(uint8_t reg_ptr, uint8_t data)
  * @param reg_ptr Register pointer
  * @param data 16-bit data (MSB, LSB)
  */
-void MCPClass::regWrite16(uint8_t reg_ptr, uint16_t data)
+void regWrite16(uint8_t reg_ptr, uint16_t data)
 {
 	WIRE.beginTransmission(I2C_ADDRESS);
 
@@ -230,7 +235,7 @@ void MCPClass::regWrite16(uint8_t reg_ptr, uint16_t data)
  * @param reg_ptr Register pointer
  * @return uint8_t Returned data
  */
-uint8_t MCPClass::regRead8(uint8_t reg_ptr)
+uint8_t regRead8(uint8_t reg_ptr)
 {
 	/* Variables */
 	uint8_t ret;
@@ -256,7 +261,7 @@ uint8_t MCPClass::regRead8(uint8_t reg_ptr)
  * @param reg_ptr Register pointer
  * @return uint16_t Returned data
  */
-uint16_t MCPClass::regRead16(uint8_t reg_ptr)
+uint16_t regRead16(uint8_t reg_ptr)
 {
 	/* Variables */
 	unsigned char rx_data[2];
