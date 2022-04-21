@@ -17,7 +17,7 @@
 #define POINTER_RESOLUTION 0x08   // Sensor resolution
 
 /* Global variables */
-uint8_t I2C_ADDRESS;
+static uint8_t I2C_ADDRESS;
 
 /* Singleton instance. Used by rest of library */
 MCPClass Mcp9808 = MCPClass::instance();
@@ -240,7 +240,7 @@ uint8_t MCPClass::regRead8(uint8_t reg_ptr)
 	WIRE.endTransmission();
 
 	/* Read data byte */
-	WIRE.requestFrom(I2C_ADDRESS, 1, 0x01);
+	WIRE.requestFrom((uint8_t) I2C_ADDRESS, (size_t) 1);
 	while (WIRE.available())
 	{
 		ret = WIRE.read();
@@ -266,7 +266,7 @@ uint16_t MCPClass::regRead16(uint8_t reg_ptr)
 	WIRE.endTransmission();
 
 	/* Read data byte */
-	WIRE.requestFrom(I2C_ADDRESS, 2, 0x01);
+	WIRE.requestFrom((uint8_t) I2C_ADDRESS, (size_t) 2);
 	int i = 0;
 	while (WIRE.available())
 	{
