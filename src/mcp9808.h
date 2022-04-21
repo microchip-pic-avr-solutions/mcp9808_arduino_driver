@@ -3,8 +3,6 @@
 
 #include <Arduino.h>
 
-#define WIRE Wire1 // Global Wire instance for driver
-
 typedef enum {
 	res_05 = 0x00,
 	res_025 = 0x01,

@@ -2,11 +2,12 @@
 
 #include <Wire.h>
 
+#define WIRE Wire1 
 // #define SerialDebug Serial5 // Cellular
 #define SerialDebug Serial3 // Cellular Mini
 // #define DEBUG
 
-#define I2C_ADDRESS_DEFAULT 0x19
+#define MCP_I2C_ADDRESS_DEFAULT 0x19
 #define POINTER_CONFIG 0x01		  // MCP9808 configuration register
 #define POINTER_UPPER_TEMP 0x02	  // Upper alert boundary
 #define POINTER_LOWER_TEMP 0x03	  // Lower alert boundery
@@ -51,7 +52,7 @@ static int8_t initialize(void) {
  * @return int 0 if successful, 1 if failed
  */
 int8_t MCPClass::begin(void) {
-	I2C_ADDRESS = I2C_ADDRESS_DEFAULT;
+	I2C_ADDRESS = MCP_I2C_ADDRESS_DEFAULT;
 	return initialize();
 }
 
