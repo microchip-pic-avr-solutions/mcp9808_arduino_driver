@@ -16,10 +16,10 @@ pipeline {
 		DEPLOY_TOOL_URL = 'https://bitbucket.microchip.com/scm/citd/tool-github-deploy.git'
         DEPLOY_SCRIPT_FILE = 'tool-github-deploy/tool-github-deploy/tool-github-deploy.py'
         BITBUCKET_REPO = 'https://bitbucket.microchip.com/scm/mcu8mass/mcp9808_arduino_driver.git'
-        GITHUB_REPO = 'https://github.com/mchpTestArea/mcp9808_arduino_driver'
+        GITHUB_REPO = 'https://github.com/microchip-pic-avr-solutions/mcp9808_arduino_driver'
         GITHUB_REPO_SHORT = 'mcp9808_arduino_driver'
-        GITHUB_ORG = 'mchpTestArea'
-        TARGET_BRANCH = 'jenkinstest'
+        GITHUB_ORG = 'microchip-pic-avr-solutions'
+        TARGET_BRANCH = 'main'
 	}
 
     stages {
@@ -71,7 +71,7 @@ pipeline {
                 stage('GitHub-Sync') {
                     steps {
                         script {
-                            withCredentials([usernamePassword(credentialsId: 'github_mchptest', usernameVariable: 'USER_NAME', passwordVariable:'PASS' )]) {
+                            withCredentials([usernamePassword(credentialsId: 'pic_avr_github', usernameVariable: 'USER_NAME', passwordVariable:'PASS' )]) {
                                 sh "python3 ${env.DEPLOY_SCRIPT_FILE} -deploy=true -gpat=${PASS} -dgid=${USER_NAME} -dburl=${env.BITBUCKET_REPO} -dgurl=${env.GITHUB_REPO} -dbranch=${env.TARGET_BRANCH}"
                             }
                         }
@@ -87,7 +87,7 @@ pipeline {
                     }
                     steps {
                         script {
-                            withCredentials([usernamePassword(credentialsId: 'github_mchptest', usernameVariable: 'USER_NAME', passwordVariable:'PASS' )]) {
+                            withCredentials([usernamePassword(credentialsId: 'pic_avr_github', usernameVariable: 'USER_NAME', passwordVariable:'PASS' )]) {
                                 sh "python3 ${env.DEPLOY_SCRIPT_FILE} -rlo=true -gpat=${PASS} -dgid=${USER_NAME} -rpn=${GITHUB_REPO_SHORT} -rporg=${GITHUB_ORG} -rltt=\"${env.GIT_TAG}\" -rltv=\"${env.GIT_TAG}\""
                             }
                         }
