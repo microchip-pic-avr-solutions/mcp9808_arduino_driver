@@ -246,7 +246,7 @@ can easily be switched between Rev1 and Rev2 by commmenting/uncommenting the fol
 ```c
 /* Initialize MCP9808 library */
 err = Mcp9808.begin(0x18); // Rev1
-// err = Mcp9808.begin(); // Rev2
+err = Mcp9808.begin(); // Rev2
 ```
 <br/>
 

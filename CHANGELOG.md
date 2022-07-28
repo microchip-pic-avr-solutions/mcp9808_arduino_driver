@@ -9,3 +9,9 @@ Initial release
 # 1.1.1
 
 * Changed name in library.properties file
+
+# 1.1.2
+
+## Changes
+
+* Set board rev2 as default _begin_ function call in examples
