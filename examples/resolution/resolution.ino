@@ -2,7 +2,7 @@
 
 #define SerialDebug Serial3 // Add this to print via Serial
 
-int8_t err, celc, fehr = 0;
+int8_t err, celc, fahr = 0;
 uint16_t res = 0;
 
 void setup(void) {
@@ -24,13 +24,13 @@ void loop(void) {
     /* Get celcius value from sensor */
     celc = (int)Mcp9808.readTempC();
     /* Get fahrenheit value from sensor */
-    fehr = (int)Mcp9808.readTempF();
+    fahr = (int)Mcp9808.readTempF();
     /* Get resolution of sensor */
     res = Mcp9808.getResolution();
 
     /* Print temperature values and sensor resolution via serial interface */
     SerialDebug.printf("Temp (*C): %d\n", celc);
-    SerialDebug.printf("Temp (*F): %d\n", fehr);
+    SerialDebug.printf("Temp (*F): %d\n", fahr);
     SerialDebug.printf("Resolution: %d\n\n", res); // NB: resolution is given in x10000 format
 
     delay(100);

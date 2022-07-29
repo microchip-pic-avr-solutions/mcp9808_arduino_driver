@@ -1,7 +1,7 @@
 #include <mcp9808.h>
 #define SerialDebug Serial3 // Add this to print via Serial
 
-int8_t err, celc, fehr = 0;
+int8_t err, celc, fahr = 0;
 uint16_t res = 0;
 
 void setup(void) {
@@ -24,11 +24,11 @@ void loop(void) {
     /* Get celcius value from sensor */
     celc = (int)Mcp9808.readTempC();
     /* Get fahrenheit value from sensor */
-    fehr = (int)Mcp9808.readTempF();
+    fahr = (int)Mcp9808.readTempF();
 
     /* Print temperature values via serial interface */
     SerialDebug.printf("Temp (*C): %d\n", celc);
-    SerialDebug.printf("Temp (*F): %d\n\n", fehr);
+    SerialDebug.printf("Temp (*F): %d\n\n", fahr);
     
     delay(100);
 }
