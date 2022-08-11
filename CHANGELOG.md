@@ -22,3 +22,9 @@ Initial release
 
 * Change labeling of TA if-else statement to reflect datasheet
 * Change conversion from celcius to fahrenheit
+
+# 1.1.4
+
+## Changes
+
+* Fixed negative sign for TA < 0

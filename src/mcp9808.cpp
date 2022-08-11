@@ -91,7 +91,7 @@ float MCPClass::readTempC(void)
 	/* Check sign of temperature data */	
 	if ((upper_byte & 0x10) == 0x10) { // T_A < 0
 		upper_byte = upper_byte  & 0x0F; // Clear sign	
-		temp = 256.0 - (upper_byte * 16.0 + lower_byte / 16.0);
+		temp = (256.0 - (upper_byte * 16.0 + lower_byte / 16.0))*-1;
 	} else { // T_A >= 0
 		temp = (upper_byte * 16.0 + lower_byte / 16.0);
 	}
