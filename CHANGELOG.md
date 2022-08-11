@@ -15,3 +15,10 @@ Initial release
 ## Changes
 
 * Set board rev2 as default _begin_ function call in examples
+
+# 1.1.3
+
+## Changes
+
+* Change labeling of TA if-else statement to reflect datasheet
+* Change conversion from celcius to fahrenheit

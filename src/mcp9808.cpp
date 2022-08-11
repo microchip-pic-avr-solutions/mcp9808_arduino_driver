@@ -89,11 +89,11 @@ float MCPClass::readTempC(void)
 	upper_byte = upper_byte & 0x1F;
 
 	/* Check sign of temperature data */	
-	if ((upper_byte & 0x10) == 0x10) { // T_A >= 0
+	if ((upper_byte & 0x10) == 0x10) { // T_A < 0
 		upper_byte = upper_byte  & 0x0F; // Clear sign	
-		temp = 256 - (upper_byte * 16 + lower_byte / 16);
-	} else { // T_A < 0
-		temp = (upper_byte * 16 + lower_byte / 16);
+		temp = 256.0 - (upper_byte * 16.0 + lower_byte / 16.0);
+	} else { // T_A >= 0
+		temp = (upper_byte * 16.0 + lower_byte / 16.0);
 	}
 
 	return temp;
@@ -109,7 +109,7 @@ float MCPClass::readTempF(void)
 	float temp = readTempC();
 
 	/* Convert *C to *F */
-	return (((temp * 9) / 5) + 32);
+	return ((temp * 1.8) + 32.0);
 }
 
 /**
