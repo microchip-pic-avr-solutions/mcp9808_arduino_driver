@@ -2,36 +2,30 @@
 
 #define SerialDebug Serial3 // Add this to print via Serial
 
-int8_t err, celc, fahr = 0;
-uint16_t res = 0;
-
 void setup(void) {
-    /* Initialize serial interface */
     SerialDebug.begin(115200);
 
-    /* Initialize MCP9808 library */
-    // err = Mcp9808.begin(0x18); // Rev1
-    err = Mcp9808.begin(); // Rev2
-    if (err) {
+    // Initialize MCP9808 library
+    // const int8_t error = Mcp9808.begin(0x18); // Rev1
+    const int8_t error = Mcp9808.begin(); // Rev2
+    if (error) {
         SerialDebug.println("Error: could not start MCP9808 library");
     }
+
+    // Set output resolution to +0.125*C
+    Mcp9808.setResolution(res_0125);
 }
 
 void loop(void) {
-    /* Set output resolution to +0.125*C */
-    Mcp9808.setResolution(res_0125);
+    const float celsius = Mcp9808.readTempC();
+    const float fahrenheit = Mcp9808.readTempF();
+    const res_t resolution = Mcp9808.getResolution();
 
-    /* Get celcius value from sensor */
-    celc = (int)Mcp9808.readTempC();
-    /* Get fahrenheit value from sensor */
-    fahr = (int)Mcp9808.readTempF();
-    /* Get resolution of sensor */
-    res = Mcp9808.getResolution();
+    SerialDebug.printf("Temperature (*C): %f\r\n", (double)celsius);
+    SerialDebug.printf("Temperature (*F): %f\r\n", (double)fahrenheit);
 
-    /* Print temperature values and sensor resolution via serial interface */
-    SerialDebug.printf("Temp (*C): %d\n", celc);
-    SerialDebug.printf("Temp (*F): %d\n", fahr);
-    SerialDebug.printf("Resolution: %d\n\n", res); // NB: resolution is given in x10000 format
+    // NB: resolution is given in x10000 format
+    SerialDebug.printf("Resolution: %d\r\n", resolution);
 
-    delay(100);
+    delay(2000);
 }
