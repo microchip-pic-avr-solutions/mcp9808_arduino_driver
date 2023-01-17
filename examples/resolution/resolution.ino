@@ -19,7 +19,7 @@ void setup(void) {
 void loop(void) {
     const float celsius = Mcp9808.readTempC();
     const float fahrenheit = Mcp9808.readTempF();
-    const res_t resolution = Mcp9808.getResolution();
+    const uint16_t resolution = Mcp9808.getResolution();
 
     SerialDebug.printf("Temperature (*C): %f\r\n", (double)celsius);
     SerialDebug.printf("Temperature (*F): %f\r\n", (double)fahrenheit);
