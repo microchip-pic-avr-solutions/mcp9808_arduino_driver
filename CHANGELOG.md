@@ -28,3 +28,9 @@ Initial release
 ## Changes
 
 * Fixed negative sign for TA < 0
+
+# 1.1.5
+
+## Changes
+
+* Fixed the temperature returned being casted to int instead of being returned as a float
